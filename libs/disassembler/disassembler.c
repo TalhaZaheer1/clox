@@ -34,8 +34,8 @@ int simpleInstruction(char *instrc, int offset) {
 
 int oneOperandInstruction(char *instrc, Chunk *chunk, int offset) {
   uint8_t operand = chunk->code[offset + 1];
-  printf("%s %d ", instrc, operand);
+  printf("%-16s %4d '", instrc, operand);
   printValue(chunk->constantArr.values[operand]);
-  printf("\n");
+  printf("'\n");
   return offset + 2;
 }
