@@ -10,5 +10,5 @@ int disassembleInstruction(Chunk *chunk, int offset);
 // helpers
 int simpleInstruction(char *instrc, int offset);
 int oneOperandInstruction(char *instrc, Chunk *chunk, int offset);
-
+int binaryInstruction(char *instrc, Chunk *chunk, int offset);
 #endif // !DISASSEMBLE_H

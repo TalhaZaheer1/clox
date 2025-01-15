@@ -1,14 +1,15 @@
 #include "../libs/VM/vm.h"
 #include "../libs/representation/chunk.h"
+#include <stdio.h>
 
 int main(int argc, char *argv[]) {
-  Chunk chunk;
-  initChunk(&chunk);
-  writeChunk(&chunk, OP_CONSTANT, 123);
-  writeChunk(&chunk, addConstant(&chunk, 77), 123);
-  writeChunk(&chunk, OP_RETURN, 123);
-  interpret(&chunk);
-
-  freeChunk(&chunk);
+  if (argc == 1) {
+    runPrompt();
+  } else if (argc == 2) {
+    runFile(argv[1]);
+  } else {
+    perror("Too many arguments.");
+    exit(1);
+  }
   return 0;
 }

@@ -21,6 +21,8 @@ int disassembleInstruction(Chunk *chunk, int offset) {
     return simpleInstruction("OP_RETURN", offset);
   case OP_CONSTANT:
     return oneOperandInstruction("OP_CONSTANT", chunk, offset);
+  case OP_ADD:
+    return binaryInstruction("OP_ADD", chunk, offset);
   default:
     printf("Invalid Instruction: %d", chunk->code[offset]);
     return offset + 1;
@@ -38,4 +40,9 @@ int oneOperandInstruction(char *instrc, Chunk *chunk, int offset) {
   printValue(chunk->constantArr.values[operand]);
   printf("'\n");
   return offset + 2;
+}
+
+int binaryInstruction(char *instrc, Chunk *chunk, int offset) {
+  printf("%s \n", instrc);
+  return offset + 1;
 }
