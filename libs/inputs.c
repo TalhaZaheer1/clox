@@ -25,13 +25,13 @@ void runFile(char *path) {
     perror("Error file position.");
     exit(1);
   }
-  char sourceCode[filePos];
-  size_t chrsRead = fread(sourceCode, 1, filePos, sourceFile);
+  char source[filePos];
+  size_t chrsRead = fread(source, 1, filePos, sourceFile);
   if (chrsRead < filePos) {
     perror("Error reading file.");
     exit(1);
   }
-  run(sourceCode);
+  run(source);
 }
 
-void run()
+void run(char *source) { interpret(source); }
