@@ -1,3 +1,3 @@
 #include "../common.h"
 
-void compiler(char *source);
+void compile(char *source);

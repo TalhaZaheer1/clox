@@ -27,6 +27,7 @@ Value pop() {
 
 InterpretResult interpret(char *source) {
   compile(source);
+  return INTERPRET_OK;
   //   vm.chunk = chunk;
   //   vm.ip = chunk->code;
   //

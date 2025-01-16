@@ -1,5 +1,4 @@
-#include "../libs/VM/vm.h"
-#include "../libs/representation/chunk.h"
+#include "../libs/inputs.h"
 #include <stdio.h>
 
 int main(int argc, char *argv[]) {

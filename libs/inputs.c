@@ -1,14 +1,13 @@
 #include "./inputs.h"
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include "./VM/vm.h"
 
 void runPrompt() {
   char input[1024];
   for (;;) {
     printf(">");
-    scanf("%s", input);
-    run(input);
+    fgets(input, sizeof(input), stdin);
+    printf("%s", input);
+    interpret(input);
     printf("\n");
   }
 }
@@ -20,18 +19,18 @@ void runFile(char *path) {
     exit(1);
   }
   fseek(sourceFile, 0, SEEK_END);
-  long int filePos = ftell(sourceFile);
-  if (filePos == -1L) {
+  long int fileSize = ftell(sourceFile);
+  if (fileSize == -1L) {
     perror("Error file position.");
     exit(1);
   }
-  char source[filePos];
-  size_t chrsRead = fread(source, 1, filePos, sourceFile);
-  if (chrsRead < filePos) {
+  rewind(sourceFile);
+  char source[fileSize + 1];
+  size_t chrsRead = fread(source, 1, fileSize, sourceFile);
+  if (chrsRead < fileSize) {
     perror("Error reading file.");
     exit(1);
   }
-  run(source);
+  source[fileSize + 1] = '\0';
+  interpret(source);
 }
-
-void run(char *source) { interpret(source); }
