@@ -26,10 +26,16 @@ Value pop() {
 }
 
 InterpretResult interpret(char *source) {
-  compile(source);
-  return INTERPRET_OK;
-  //   vm.chunk = chunk;
-  //   vm.ip = chunk->code;
+  Chunk chunk;
+  initChunk(&chunk);
+
+  if (!compile(source, &chunk)) {
+    freeChunk(&chunk);
+    return INTERPRET_COMPILETIME_EXCEPTION;
+  }
+
+  vm.chunk = &chunk;
+  vm.ip = chunk.code;
   //
   // #define READ_BYTE() (*vm.ip++)
   // #define READ_CONSTANT() (chunk->constantArr.values[READ_BYTE()])

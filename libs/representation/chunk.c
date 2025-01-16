@@ -22,7 +22,7 @@ void writeChunk(Chunk *chunk, uint8_t instruction, int line) {
   chunk->lines[chunk->count++] = line;
 }
 
-uint8_t addConstant(Chunk *chunk, int constant) {
+int addConstant(Chunk *chunk, int constant) {
   return writeValueArray(&chunk->constantArr, constant);
 }
 

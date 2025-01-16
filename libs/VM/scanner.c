@@ -1,13 +1,26 @@
 #include "scanner.h"
-#include <stdio.h>
 #include <string.h>
 
 Scanner scanner;
+static char advance() {
+  scanner.current++;
+  return scanner.current[-1];
+}
 
 void initScanner(char *source) {
   scanner.start = source;
   scanner.current = source;
   scanner.line = 1;
+}
+static Token number() {
+  while (isDigit(peek()))
+    advance();
+  if (peek() == '.' && isDigit(peekNext())) {
+    advance();
+    while (isDigit(peek()))
+      advance();
+  }
+  return makeToken(TOKEN_NUMBER);
 }
 
 Token scanToken() {
@@ -66,11 +79,6 @@ Token scanToken() {
 }
 
 bool isAtEnd() { return *scanner.current == '\0'; }
-
-char advance() {
-  scanner.current++;
-  return scanner.current[-1];
-}
 
 char peek() { return *scanner.current; }
 
@@ -138,17 +146,6 @@ char peekNext() {
   if (isAtEnd())
     return '\0';
   return scanner.current[1];
-}
-
-Token number() {
-  while (isDigit(peek()))
-    advance();
-  if (peek() == '.' && isDigit(peekNext())) {
-    advance();
-    while (isDigit(peek()))
-      advance();
-  }
-  return makeToken(TOKEN_NUMBER);
 }
 
 Token identifier() {

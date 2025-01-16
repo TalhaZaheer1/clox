@@ -1,3 +1,6 @@
+#ifndef SCANNER_H
+#define SCANNER_H
+
 #include "../common.h"
 
 typedef enum {
@@ -67,16 +70,17 @@ Token scanToken();
 // helpers
 bool isAtEnd();
 Token makeToken(TokenType type);
-char advance();
 bool match(char character);
 char peek();
+char peekNext();
 void ignoreWhiteSpaces();
 Token string();
 Token errorToken(const char *message);
 void comment();
-Token number();
 Token identifier();
 bool isDigit(char c);
 bool isAlpha(char c);
 TokenType identifierType();
 TokenType checkKeyword(int start, int length, char *str, TokenType type);
+
+#endif

@@ -24,7 +24,7 @@ typedef struct {
 
 void initChunk(Chunk *chunk);
 void writeChunk(Chunk *chunk, uint8_t instruction, int line);
-uint8_t addConstant(Chunk *chunk, int constant);
+int addConstant(Chunk *chunk, int constant);
 void freeChunk(Chunk *chunk);
 
 #endif
