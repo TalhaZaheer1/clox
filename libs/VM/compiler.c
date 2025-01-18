@@ -69,6 +69,11 @@ static void number() {
   emitConstant(num);
 }
 
+static void grouping() {
+  expression();
+  consume(TOKEN_RIGHT_PAREN, "Expected ')' after expression.");
+}
+
 static void advance() {
   parser.previous = parser.current;
 

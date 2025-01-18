@@ -6,5 +6,6 @@
 #include "./scanner.h"
 
 bool compile(char *source, Chunk *chunk);
+static void consume(TokenType type, char *message);
 
 #endif
