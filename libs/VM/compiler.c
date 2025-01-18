@@ -1,7 +1,21 @@
 #include "./compiler.h"
 #include "scanner.h"
-#include <stdio.h>
-#include <stdlib.h>
+
+void expression();
+
+typedef enum {
+  PREC_NONE,
+  PREC_ASSIGNMENT, // =
+  PREC_OR,         // or
+  PREC_AND,        // and
+  PREC_EQUALITY,   // == !=
+  PREC_COMPARISON, // < > <= >=
+  PREC_TERM,       // + -
+  PREC_FACTOR,     // * /
+  PREC_UNARY,      // ! -
+  PREC_CALL,       // . ()
+  PREC_PRIMARY
+} Precedence;
 
 typedef struct {
   Token previous;
@@ -49,7 +63,44 @@ static void emitBytes(OpCode code1, OpCode code2) {
 static void emitReturn() { emitByte(OP_RETURN); }
 static void endCompiler() { emitReturn(); }
 
-static void expression() {}
+static void binary() {
+  TokenType type = parser.previous.type;
+
+  expression();
+
+  switch (type) {
+  case TOKEN_MINUS:
+    emitByte(OP_SUBSTRACT);
+    break;
+  case TOKEN_PLUS:
+    emitByte(OP_ADD);
+    break;
+  case TOKEN_STAR:
+    emitByte(OP_MULTIPLY);
+    break;
+  case TOKEN_SLASH:
+    emitByte(OP_DIVIDE);
+    break;
+  default:
+    return;
+  }
+}
+
+static void unary() {
+  TokenType type = parser.previous.type;
+
+  expression();
+
+  switch (type) {
+  case TOKEN_MINUS:
+    emitByte(OP_NEGATE);
+    break;
+  default:
+    return;
+  }
+}
+
+void parsePrecedence() {}
 
 static uint8_t makeConstant(double num) {
   int indx = addConstant(currentChunk(), num);
