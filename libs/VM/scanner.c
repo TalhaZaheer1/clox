@@ -137,7 +137,7 @@ Token errorToken(const char *message) {
   return token;
 }
 
-bool isDigit(char c) { return c > '0' && c < '9'; }
+bool isDigit(char c) { return c >= '0' && c <= '9'; }
 bool isAlpha(char c) {
   return (c > 'a' && c < 'z') || (c > 'A' && c < 'Z') || c == '_';
 }
