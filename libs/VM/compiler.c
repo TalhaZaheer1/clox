@@ -1,21 +1,8 @@
 #include "./compiler.h"
+#include "../disassembler/disassembler.h"
 #include "scanner.h"
-#include <stdio.h>
-#include <string.h>
 
-typedef enum {
-  PREC_NONE,
-  PREC_ASSIGNMENT, // =
-  PREC_OR,         // or
-  PREC_AND,        // and
-  PREC_EQUALITY,   // == !=
-  PREC_COMPARISON, // < > <= >=
-  PREC_TERM,       // + -
-  PREC_FACTOR,     // * /
-  PREC_UNARY,      // ! -
-  PREC_CALL,       // . ()
-  PREC_PRIMARY
-} Precedence;
+#define DEBUG_PRINT_CODE
 
 typedef enum {
   PREC_NONE,
@@ -64,7 +51,7 @@ ParseRule rules[] = {
     [TOKEN_RIGHT_BRACE] = {NULL, NULL, PREC_NONE},
     [TOKEN_COMMA] = {NULL, NULL, PREC_NONE},
     [TOKEN_DOT] = {NULL, NULL, PREC_NONE},
-    [TOKEN_MINUS] = {&unary, &grouping, PREC_TERM},
+    [TOKEN_MINUS] = {&unary, &binary, PREC_TERM},
     [TOKEN_PLUS] = {NULL, binary, PREC_TERM},
     [TOKEN_SEMICOLON] = {NULL, NULL, PREC_NONE},
     [TOKEN_SLASH] = {NULL, binary, PREC_FACTOR},
@@ -248,6 +235,9 @@ bool compile(char *source, Chunk *chunk) {
   emitReturn();
 
 #ifdef DEBUG_PRINT_CODE
+  if (!parser.hadError) {
+    disassembleChunk(currentChunk(), "Compiler Testing Code");
+  }
 
 #endif /* ifdef DEBUG_PRINT_CODE                                               \
         */

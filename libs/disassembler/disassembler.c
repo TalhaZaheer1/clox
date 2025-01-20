@@ -1,6 +1,4 @@
 #include "./disassembler.h"
-#include <stdint.h>
-#include <stdio.h>
 
 void disassembleChunk(Chunk *chunk, char *title) {
   printf("== %s ==\n", title);
@@ -22,9 +20,17 @@ int disassembleInstruction(Chunk *chunk, int offset) {
   case OP_CONSTANT:
     return oneOperandInstruction("OP_CONSTANT", chunk, offset);
   case OP_ADD:
-    return binaryInstruction("OP_ADD", chunk, offset);
+    return simpleInstruction("OP_ADD", offset);
+  case OP_SUBSTRACT:
+    return simpleInstruction("OP_SUBSTRACT", offset);
+  case OP_MULTIPLY:
+    return simpleInstruction("OP_MULTIPLY", offset);
+  case OP_DIVIDE:
+    return simpleInstruction("OP_DIVIDE", offset);
+  case OP_NEGATE:
+    return simpleInstruction("OP_NEGATE", offset);
   default:
-    printf("Invalid Instruction: %d", chunk->code[offset]);
+    printf("Invalid Instruction: %d\n", chunk->code[offset]);
     return offset + 1;
   }
 }
@@ -40,9 +46,4 @@ int oneOperandInstruction(char *instrc, Chunk *chunk, int offset) {
   printValue(chunk->constantArr.values[operand]);
   printf("'\n");
   return offset + 2;
-}
-
-int binaryInstruction(char *instrc, Chunk *chunk, int offset) {
-  printf("%s \n", instrc);
-  return offset + 1;
 }

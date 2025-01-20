@@ -70,7 +70,7 @@ Token scanToken() {
     if (match('/'))
       comment();
     else
-      return errorToken("Expected '/' after character.");
+      return makeToken(TOKEN_SLASH);
     break;
   case '"':
     return string();
