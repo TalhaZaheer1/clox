@@ -1,6 +1,24 @@
 #include "../common.h"
 
-typedef double Value;
+typedef enum { VAL_BOOL, VAL_NUMBER, VAL_NIL } ValueType;
+
+typedef struct {
+  ValueType tag;
+  union {
+    bool boolean;
+    double number;
+  } as;
+} Value;
+
+#define CREATE_NUMBER(literal) ((Value){VAL_NUMBER, {.number = literal}})
+#define CREATE_BOOLEAN(literal) ((Value){VAL_BOOL, {.boolean = literal}})
+#define CREATE_NIL() ((Value){VAL_NUMBER, {.number = 0}})
+
+#define IS_BOOL(value) (value.tag == VAL_BOOL)
+#define IS_NUMBER(value) (value.tag == VAL_NUMBER)
+
+#define AS_NUMBER(value) (value.as.number)
+#define AS_BOOL(value) (value.as.boolean)
 
 typedef struct {
   int count;

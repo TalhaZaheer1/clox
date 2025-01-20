@@ -12,6 +12,15 @@ void initScanner(char *source) {
   scanner.current = source;
   scanner.line = 1;
 }
+
+static char peek() { return *scanner.current; }
+
+char peekNext() {
+  if (isAtEnd())
+    return '\0';
+  return scanner.current[1];
+}
+
 static Token number() {
   while (isDigit(peek()))
     advance();
@@ -80,8 +89,6 @@ Token scanToken() {
 
 bool isAtEnd() { return *scanner.current == '\0'; }
 
-char peek() { return *scanner.current; }
-
 bool match(char character) { return peek() == character; }
 
 void comment() {
@@ -140,12 +147,6 @@ Token errorToken(const char *message) {
 bool isDigit(char c) { return c >= '0' && c <= '9'; }
 bool isAlpha(char c) {
   return (c > 'a' && c < 'z') || (c > 'A' && c < 'Z') || c == '_';
-}
-
-char peekNext() {
-  if (isAtEnd())
-    return '\0';
-  return scanner.current[1];
 }
 
 Token identifier() {

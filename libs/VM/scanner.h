@@ -71,8 +71,6 @@ Token scanToken();
 bool isAtEnd();
 Token makeToken(TokenType type);
 bool match(char character);
-char peek();
-char peekNext();
 void ignoreWhiteSpaces();
 Token string();
 Token errorToken(const char *message);
