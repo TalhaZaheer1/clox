@@ -23,4 +23,18 @@ void freeValueArray(ValueArray *arr) {
   arr->count = 0;
 }
 
-void printValue(Value value) { printf("%g", value); }
+void printValue(Value value) {
+  switch (value.tag) {
+  case VAL_BOOL:
+    printf(AS_BOOL(value) ? "true" : "false");
+    break;
+  case VAL_NUMBER:
+    printf("%g", AS_NUMBER(value));
+    break;
+  case VAL_NIL:
+    printf("nil");
+    break;
+  default:
+    return;
+  }
+}

@@ -12,10 +12,11 @@ typedef struct {
 
 #define CREATE_NUMBER(literal) ((Value){VAL_NUMBER, {.number = literal}})
 #define CREATE_BOOLEAN(literal) ((Value){VAL_BOOL, {.boolean = literal}})
-#define CREATE_NIL() ((Value){VAL_NUMBER, {.number = 0}})
+#define CREATE_NIL() ((Value){VAL_NIL, {.number = 0}})
 
 #define IS_BOOL(value) (value.tag == VAL_BOOL)
 #define IS_NUMBER(value) (value.tag == VAL_NUMBER)
+#define IS_NIL(value) (value.tag == VAL_NIL)
 
 #define AS_NUMBER(value) (value.as.number)
 #define AS_BOOL(value) (value.as.boolean)

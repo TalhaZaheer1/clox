@@ -89,7 +89,14 @@ Token scanToken() {
 
 bool isAtEnd() { return *scanner.current == '\0'; }
 
-bool match(char character) { return peek() == character; }
+bool match(char character) {
+  if (peek() == character) {
+    advance();
+    return true;
+  }
+
+  return false;
+}
 
 void comment() {
   while (peek() != '\n') {
