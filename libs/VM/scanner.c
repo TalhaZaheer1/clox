@@ -1,5 +1,4 @@
 #include "scanner.h"
-#include <string.h>
 
 Scanner scanner;
 static char advance() {
@@ -19,6 +18,16 @@ char peekNext() {
   if (isAtEnd())
     return '\0';
   return scanner.current[1];
+}
+
+static Token string() {
+  while (!isAtEnd() && peek() != '"') {
+    advance();
+  }
+  if (isAtEnd())
+    return errorToken("Unterminated string.");
+  advance();
+  return makeToken(TOKEN_STRING);
 }
 
 static Token number() {
@@ -121,16 +130,6 @@ void ignoreWhiteSpaces() {
       return;
     }
   }
-}
-
-Token string() {
-  while (!isAtEnd() && peek() != '"') {
-    advance();
-  }
-  if (isAtEnd())
-    return errorToken("Unterminated string.");
-  advance();
-  return makeToken(TOKEN_STRING);
 }
 
 Token makeToken(TokenType type) {

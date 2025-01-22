@@ -72,7 +72,6 @@ bool isAtEnd();
 Token makeToken(TokenType type);
 bool match(char character);
 void ignoreWhiteSpaces();
-Token string();
 Token errorToken(const char *message);
 void comment();
 Token identifier();
