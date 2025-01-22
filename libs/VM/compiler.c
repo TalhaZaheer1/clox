@@ -151,7 +151,8 @@ static void emitReturn() { emitByte(OP_RETURN); }
 static void endCompiler() { emitReturn(); }
 
 void string() {
-  emitConstant(createStringVal(parser.previous.lexeme, parser.previous.length));
+  emitConstant(CREATE_OBJ(
+      (Obj *)copyStr(parser.previous.lexeme + 1, parser.previous.length - 2)));
 }
 
 void binary() {

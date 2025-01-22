@@ -1,12 +1,17 @@
+#ifndef VALUE_H
+#define VALUE_H
+
 #include "../common.h"
 
 typedef enum { VAL_BOOL, VAL_NUMBER, VAL_NIL, VAL_OBJ } ValueType;
 
 typedef enum { OBJ_STRING, OBJ_FUNCTION } ObjType;
+typedef struct Obj Obj;
 
-typedef struct {
+struct Obj {
   ObjType type;
-} Obj;
+  Obj *next;
+};
 
 typedef struct {
   Obj obj;
@@ -45,6 +50,8 @@ bool isObjType(Value value, ObjType type);
 #define AS_STRING(value) ((ObjString *)AS_OBJ(value))
 #define AS_CSTRING(value) (((ObjString *)AS_OBJ(value))->chars)
 
+#define ALLOCATE_OBJ(type, objType) (type *)allocateObj(sizeof(type), objType)
+
 typedef struct {
   int count;
   int capacity;
@@ -55,4 +62,10 @@ void initValueArray(ValueArray *arr);
 int writeValueArray(ValueArray *arr, Value constant);
 void freeValueArray(ValueArray *arr);
 void printValue(Value value);
-Value createStringVal(char *strPtr, size_t length);
+void printObjVal(Obj *obj);
+void printObjStr(ObjString *string);
+ObjString *copyStr(const char *str, size_t length);
+ObjString *allocateStrObj(char *heapStr, size_t length);
+void *allocateObj(size_t size, ObjType type);
+
+#endif // !VALUE_H

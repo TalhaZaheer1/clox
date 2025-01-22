@@ -1,16 +1,40 @@
 #include "./vm.h"
 
 #include "../disassembler/disassembler.h"
+#include "../memory.h"
 #include "./compiler.h"
 #include <stdarg.h>
+#include <string.h>
 
 #define DEBUG_TRACE_EXECUTION
 
 VM vm;
 
-void initVM() { resetStack(); }
+void initVM() {
+  resetStack();
+  vm.objects = NULL;
+}
 
-void freeVM() {}
+void freeVM() { freeObjects(); }
+
+static void freeObject() {
+  switch (vm.objects->type) {
+  case OBJ_STRING: {
+    ObjString *str = (ObjString *)vm.objects;
+    FREE_ARRAY(char, str->chars, str->length + 1);
+    FREE(ObjString, str, 1);
+    break;
+  }
+  }
+}
+
+void freeObjects() {
+  while (vm.objects != NULL) {
+    Obj *next = vm.objects->next;
+    freeObject();
+    vm.objects = next;
+  }
+}
 
 void resetStack() { vm.stackTop = vm.stack; }
 
@@ -42,9 +66,30 @@ static bool valuesEqual(Value a, Value b) {
     return true;
   case VAL_NUMBER:
     return AS_NUMBER(a) == AS_NUMBER(b);
+  case VAL_OBJ: {
+    if (IS_STRING(a) && IS_STRING(b)) {
+      ObjString *strA = AS_STRING(a);
+      ObjString *strB = AS_STRING(b);
+      return strA->length == strB->length &&
+             memcmp(strA->chars, strB->chars, strA->length) == 0;
+    }
+  }
   default:
     return false;
   }
+}
+
+static void concateString() {
+  Value valB = pop();
+  Value valA = pop();
+  ObjString *a = AS_STRING(valA);
+  ObjString *b = AS_STRING(valB);
+  size_t newLen = a->length + b->length;
+  char *newStr = ALLOCATE(char, newLen + 1);
+  memcpy(newStr, a->chars, a->length);
+  memcpy(newStr + a->length, b->chars, b->length);
+  newStr[newLen] = '\0';
+  push(CREATE_OBJ((Obj *)allocateStrObj(newStr, newLen)));
 }
 
 void push(Value value) {
@@ -65,11 +110,11 @@ static InterpretResult run() {
 #define READ_CONSTANT() (vm.chunk->constantArr.values[READ_BYTE()])
 #define BINARY_OP(createType, op)                                              \
   do {                                                                         \
-    Value valB = pop();                                                        \
-    Value valA = pop();                                                        \
-    if (IS_NUMBER(valA) && IS_NUMBER(valB)) {                                  \
-      double a = AS_NUMBER(valA);                                              \
-      double b = AS_NUMBER(valB);                                              \
+    if (IS_STRING(peek(0)) && IS_STRING(peek(1))) {                            \
+      concateString();                                                         \
+    } else if (IS_NUMBER(peek(0)) && IS_NUMBER(peek(1))) {                     \
+      double b = AS_NUMBER(pop());                                             \
+      double a = AS_NUMBER(pop());                                             \
       push(createType(a op b));                                                \
     } else {                                                                   \
       runtimeError("Unexpected type in binary operation.");                    \

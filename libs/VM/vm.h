@@ -10,13 +10,16 @@ typedef struct {
   Value stack[MAX_STACK];
   Value *stackTop;
   uint8_t *ip;
+  Obj *objects;
 } VM;
 
 typedef enum {
-  INTERPRET_OK,
+  INTERPRET_OK = 10,
   INTERPRET_RUNTIME_EXCEPTION,
   INTERPRET_COMPILETIME_EXCEPTION
 } InterpretResult;
+
+extern VM vm;
 
 void initVM();
 void freeVM();
@@ -24,5 +27,6 @@ InterpretResult interpret(char *source);
 void push(Value value);
 Value pop();
 void resetStack();
+void freeObjects();
 
 #endif
